@@ -1,4 +1,4 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useCallback } from "react";
 import styles from './my-phonebook.module.css';
 import PhonebookForm from "../Phonebook Form/PhonebookForm";
 import PhonebookList from "../Phonebook List/PhonebookList"
@@ -31,7 +31,7 @@ const MyPhonebook = () => {
 
     const addContact = (data) => {
         if(isDublicate(data)) {
-            return alert(`You've already added ${data.name} with a number ${data.number} to your phonebook.`)
+            return alert(`You've already added ${data.name} or a number ${data.number} to your phonebook.`)
         }
 
         setContacts(prevContacts =>{
@@ -44,11 +44,11 @@ const MyPhonebook = () => {
         })
     };
 
-    const removeContact = (id) => {
+    const removeContact = useCallback ((id) => {
         setContacts(prevContacts => prevContacts.filter(item => item.id !== id))
-    };
+    }, []);
 
-    const changeFilter = ({target}) => setFilter(target.value);
+    const changeFilter = useCallback (({target}) => setFilter(target.value), []);
 
 
     const getFilteredContacts = () => {

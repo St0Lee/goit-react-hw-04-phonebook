@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useMemo, useCallback, memo} from "react";
 import { nanoid } from 'nanoid';
 
 import styles from "./phonebook-form.module.css";
@@ -8,19 +8,19 @@ const INITIAL_STATE = {
     number: ''
 }
 
-const contactId = nanoid();
-const numberId = nanoid();
-
 const PhonebookForm = ({onSubmit}) => {
     const [state, setState] = useState({...INITIAL_STATE});
-   
-    const handleChange = ({target}) => {
+    
+    const contactId = useMemo(() => nanoid(), []);
+    const numberId = useMemo(() => nanoid(), []);
+
+    const handleChange = useCallback(({target}) => {
         const {name, value} = target;
-        setState ({
-            ...state, 
+        setState (prevState => ({
+            ...prevState, 
             [name]: value   
-        })
-     };
+        }))
+     }, []);
         
     const handleSubmit = (e) => {
             e.preventDefault();
@@ -28,9 +28,9 @@ const PhonebookForm = ({onSubmit}) => {
             reset();
         };
         
-    const reset = () => {
+    const reset = useCallback (() => {
             setState({...INITIAL_STATE })
-        };
+        }, []);
     
         const {name, number} = state;
 
@@ -56,4 +56,4 @@ const PhonebookForm = ({onSubmit}) => {
     )
 }
 
-export default PhonebookForm;
+export default memo(PhonebookForm);
